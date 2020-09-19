@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-ingress
@@ -16,9 +16,13 @@ spec:
       serviceAccountName: nginx-ingress
       #nodeSelector:
       #  role: master
+      volumes:
+        - name: nginx-tmpl
+          configMap:
+            name: nginx-tmpl
       containers:
       #- image: nginx/nginx-ingress:edge
-      - image: nginx/nginx-ingress:1.4.1-alpine
+      - image: nginx/nginx-ingress:1.8.1-alpine
         imagePullPolicy: IfNotPresent
         name: nginx-ingress
         ports:
@@ -26,6 +30,10 @@ spec:
           containerPort: 80
         - name: https
           containerPort: 443
+        volumeMounts:
+        - name: nginx-tmpl
+          mountPath: /nginx.tmpl
+          subPath: nginx.tmpl
         env:
         - name: POD_NAMESPACE
           valueFrom:
