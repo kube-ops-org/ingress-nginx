@@ -21,3 +21,11 @@ spec:
             servicePort: 8080
         - path: /wear
           backend:
+
+
+
+
+:set list
+:set expandtab
+:retab
+:set nolist
