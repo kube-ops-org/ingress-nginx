@@ -24,6 +24,13 @@ spec:
               number: 8080
         path: /stream
         pathType: Prefix
+      - backend:
+          service: 
+            name: food-service
+            port:
+              number: 8080
+        path:  /eat 
+        pathType: Prefix   
       
 
 status:
