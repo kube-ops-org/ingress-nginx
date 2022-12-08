@@ -1,1 +1,152 @@
 
+common commands:
+
+h ls -n kube-systm
+
+k logs aws-load-balancer-controller-d5cbcbd6b-92d98 -n kube-system
+
+h uninstall aws-load-balancer-controller -n kube-system
+
+kubectl get services nginx-ingress-nginx-ingress
+
+kubectl get services aws-load-balancer-webhook-service
+
+kubectl get pods --all-namespaces -l app=nginx-ingress-nginx-ingress
+
+
+
+kubectl logs -n kube-system $(kubectl get po -n kube-system | egrep -o "alb-ingress[a-zA-Z0-9-]+")
+
+
+
+
+Process 1: With out iam
+worked
+h install aws-load-balancer-controller eks/aws-load-balancer-controller --set clusterName=eks -n kube-system
+
+
+Process 2: With iam
+Not worked
+
+
+
+helm repo add eks https://aws.github.io/eks-charts
+
+kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
+
+
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+    --set clusterName= \
+    --set serviceAccount.create=false \
+    --set region=YOUR_REGION_CODE \
+    --set vpcId=<VPC_ID> \
+    --set serviceAccount.name=aws-load-balancer-controller \
+    -n kube-system
+
+
+
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.1/docs/examples/2048/2048_full.yaml
+
+
+
+
+kubectl logs -n kube-system deployment.apps/aws-load-balancer-controller
+
+
+export GAME_2048=$(kubectl get ingress/ingress-2048 -n game-2048 -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+
+echo http://${GAME_2048}
+
+
+
+
+
+
+
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+
+mv /tmp/eksctl /usr/local/bin
+
+eksctl version
+
+
+
+1.
+
+
+eksctl utils associate-iam-oidc-provider \
+    --region us-east-1 \
+    --cluster eks \
+    --approve
+
+2.
+
+curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
+
+
+3.
+
+aws iam create-policy \
+    --policy-name AWSLoadBalancerControllerIAMPolicy \
+    --policy-document file://iam-policy.json
+
+
+aws iam create-policy     --policy-name AWSLoadBalancerControllerIAMPolicy     --policy-document file://iam-policy.json
+
+
+
+4.
+
+eksctl create iamserviceaccount \
+--cluster=eks \
+--namespace=kube-system \
+--name=aws-load-balancer-controller \
+--region=us-east-1 \
+--attach-policy-arn=arn:aws:iam::78:policy/AWSLoadBalancerControllerIAMPolicy \
+--approve
+
+
+eksctl create iamserviceaccount --cluster=eks --namespace=kube-system --name=aws-load-balancer-controller --region=us-east-1 --attach-policy-arn=arn:aws:iam::78:policy/AWSLoadBalancerControllerIAMPolicy --approve
+
+
+
+
+
+5.
+
+
+kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
+
+
+
+
+
+6.
+
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+    --set clusterName=eks \
+    --set serviceAccount.create=false \
+    --set region=us-east-1 \
+    --set vpcId=vpc-0b \
+    --set serviceAccount.name=aws-load-balancer-controller \
+    -n kube-system
+
+
+
+h install aws-load-balancer-controller eks/aws-load-balancer-controller \
+    --set clusterName=eks \
+    --set serviceAccount.create=false \
+    --set region=us-east-1 \
+    --set vpcId=vpc-0b8614d3bf0243a85 \
+    --set serviceAccount.name=aws-load-balancer-controller \
+    -n kube-system
+
+
+
+helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=eks --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
+
+
+
+h upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=eks --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
+
