@@ -2,7 +2,7 @@ kind: Pod
 apiVersion: v1
 metadata:
   name: apple-app
-  namespace: nginx-ingress
+  namespace: game-2048
   labels:
     app: apple
 spec:
@@ -18,7 +18,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: apple-service
-  namespace: nginx-ingress
+  namespace: game-2048
 spec:
   selector:
     app: apple
