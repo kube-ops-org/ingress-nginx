@@ -1,0 +1,6 @@
+
+kubectl create ns ingress-nginx
+kubectl create configmap ingress-nginx-controller --namespace ingress-nginx
+
+kubectl create serviceaccount ingress-nginx --namespace ingress-nginx
+kubectl create serviceaccount ingress-nginx-admission --namespace ingress-nginx
